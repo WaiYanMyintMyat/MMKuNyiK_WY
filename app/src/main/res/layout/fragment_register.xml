@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            >
+
+            <Button
+                android:id="@+id/btn_google_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign In With Google"
+                android:background="#e9e7e7"
+                android:textAllCaps="false"
+                android:paddingLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/ic_google"
+                android:drawablePadding="8dp"/>
+
+            <Button
+                android:id="@+id/btn_facebook_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Continue With Facebook"
+                android:textAllCaps="false"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="16dp"
+                android:drawableLeft="@drawable/ic_facebook"
+                android:drawablePadding="8dp"
+                android:background="#475CA8"
+                android:textColor="#FFF"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Let's us know how to call you"
+                android:layout_marginTop="16dp"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Your phone number,plz? (we won't call ya)"
+                android:layout_marginTop="16dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="phone"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your secret password"
+                android:layout_marginTop="16dp"
+                >
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/sp_township"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/townships_array"
+                android:layout_marginTop="16dp"
+                />
+
+            <RadioGroup
+                android:id="@+id/rg_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/rb_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:layout_marginRight="10dp"/>
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/rb_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"/>
+
+            </RadioGroup>
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_eula"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please check if you agree out terms &amp; conditions"
+                android:layout_marginTop="16dp"/>
+
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Up"
+                android:layout_marginTop="16dp"
+                android:background="#8EC5C9"
+                android:textColor="#FFFFFF"
+                />
+
+            <TextView
+                android:id="@+id/tv_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="Terms &amp; Privacy Policy"
+                android:foreground="@drawable/ripple"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

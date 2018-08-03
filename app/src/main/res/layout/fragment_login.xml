@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/iv_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/loginimage"
+        android:layout_above="@+id/tv_greeting_msg"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/tv_greeting_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to PADC-5"
+        android:textColor="#FF0000"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"/>
+
+    <EditText
+        android:id="@+id/et_user_phone"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter your phone number"
+        android:inputType="phone"
+        android:layout_below="@+id/tv_greeting_msg"
+        android:layout_centerHorizontal="true"
+        />
+
+    <EditText
+        android:id="@+id/et_user_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter password"
+        android:inputType="textPassword"
+        android:layout_below="@+id/et_user_phone"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_below="@+id/et_user_password"
+        android:layout_alignRight="@+id/et_user_password"/>
+
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register New Account."
+        android:layout_below="@+id/btn_login"
+        android:layout_alignRight="@+id/btn_login"
+        android:foreground="@drawable/ripple"
+        android:padding="8dp"
+        />
+</RelativeLayout>
