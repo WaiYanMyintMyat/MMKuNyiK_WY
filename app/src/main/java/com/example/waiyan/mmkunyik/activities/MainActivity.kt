@@ -7,28 +7,54 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import com.example.waiyan.mmkunyik.R
 import com.example.waiyan.mmkunyik.adapters.JobsListAdapter
+import com.example.waiyan.mmkunyik.components.SmartScrollListener
 import com.example.waiyan.mmkunyik.delegates.BeforeLoginDelegate
+import com.example.waiyan.mmkunyik.delegates.JobsDelegate
+import com.example.waiyan.mmkunyik.events.ApiErrorEvent
+import com.example.waiyan.mmkunyik.events.ForceGetJobEvent
+import com.example.waiyan.mmkunyik.events.SuccessGetJobEvent
+import com.example.waiyan.mmkunyik.utils.AppConstants
 import com.example.waiyan.mmkunyik.views.pods.BeforeLoginViewPod
+import com.padc.mmkunyi.data.models.JobModel
+import com.padc.mmkunyi.data.vos.JobVO
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
-class MainActivity : BaseActivity() , BeforeLoginDelegate {
+class MainActivity : BaseActivity(), BeforeLoginDelegate , JobsDelegate{
+    override fun onTapJob(jobVO: JobVO) {
+        val intent = Intent(applicationContext, JobDetailActivity::class.java)
+        intent.putExtra(AppConstants.JOB_ID, jobVO.jobPostId)
+        startActivity(intent)
+    }
+
+    override fun onTapApply(jobVO: JobVO) {
+
+    }
+
     override fun onTapLogin() {
-        val intent= Intent(applicationContext,AccountControlActivity::class.java)
-        intent.putExtra(AccountControlActivity.ACTION_TYPE,AccountControlActivity.ACTION_TYPE_LOGIN)
+        val intent = Intent(applicationContext, AccountControlActivity::class.java)
+        intent.putExtra(AccountControlActivity.ACTION_TYPE, AccountControlActivity.ACTION_TYPE_LOGIN)
         startActivity(intent)
     }
 
     override fun onTapRegister() {
-        val intent=Intent(applicationContext,AccountControlActivity::class.java)
-        intent.putExtra(AccountControlActivity.ACTION_TYPE,AccountControlActivity.ACTION_TYPE_REGISTER)
+        val intent = Intent(applicationContext, AccountControlActivity::class.java)
+        intent.putExtra(AccountControlActivity.ACTION_TYPE, AccountControlActivity.ACTION_TYPE_REGISTER)
         startActivity(intent)
     }
 
     private lateinit var mJobsListAdapter: JobsListAdapter
+    private var snackBar: Snackbar? = null
+    private var mSmartScrollListener: SmartScrollListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,15 +75,15 @@ class MainActivity : BaseActivity() , BeforeLoginDelegate {
             when (it.itemId) {
                 R.id.menu_lastest_news -> {
                     Snackbar.make(navigationView
-                            , "Tapped Lastest News", Snackbar.LENGTH_LONG).show()
+                            , "Tapped Job Lists", Snackbar.LENGTH_LONG).show()
                 }
                 R.id.menu_news_just_for_now -> {
                     Snackbar.make(navigationView
-                            , "Tapped Just For You", Snackbar.LENGTH_LONG).show()
+                            , "Tapped Job For You", Snackbar.LENGTH_LONG).show()
                 }
                 R.id.menu_favourite_news -> {
                     Snackbar.make(navigationView
-                            , "Tapped Favourite", Snackbar.LENGTH_LONG).show()
+                            , "Tapped Populated Jobs", Snackbar.LENGTH_LONG).show()
                 }
             }
 
@@ -69,18 +95,28 @@ class MainActivity : BaseActivity() , BeforeLoginDelegate {
             return@setNavigationItemSelectedListener true
         }
 
+        swipeRefreshLayout.isRefreshing = true
+        JobModel.getObjectInstance()!!.loadJobList()
+
         val vpBeforeLogin = navigationView.getHeaderView(0) as BeforeLoginViewPod
         vpBeforeLogin.setDelegate(this)
 
         rvJobsList.layoutManager = LinearLayoutManager(applicationContext)
-        mJobsListAdapter = JobsListAdapter()
+        mJobsListAdapter = JobsListAdapter(this)
         rvJobsList.adapter = mJobsListAdapter
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+        swipeRefreshLayout.setOnRefreshListener {
+            JobModel.getObjectInstance()!!.loadJobListForceRefresh()
+        }
+
+        mSmartScrollListener = SmartScrollListener(object : SmartScrollListener.OnSmartScrollListener {
+            override fun onListEndReach() {
+                Snackbar.make(rvJobsList, "Loading more data.", Snackbar.LENGTH_LONG).show()
+                //swipeRefresh.isRefreshing = true
+                //MMHealthModel.getInstanceObject()!!.loadHealthCareInfo()
+            }
+        })
+        rvJobsList.addOnScrollListener(mSmartScrollListener)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -95,4 +131,48 @@ class MainActivity : BaseActivity() , BeforeLoginDelegate {
 
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onStart() {
+        super.onStart()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSuccessGetJobEvent(successEvent: SuccessGetJobEvent) {
+        swipeRefreshLayout.isRefreshing = false
+        mJobsListAdapter.appendJob(successEvent.jobList)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSuccessGetJobEventForceRefresh(successForceGetJobEvent: ForceGetJobEvent){
+        swipeRefreshLayout.isRefreshing = false
+        vpEmptyNews.visibility = View.GONE
+        mJobsListAdapter.setJob(successForceGetJobEvent.jobList)
+        if(snackBar!=null){
+            snackBar!!.dismiss()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFailureApiEvent(errorEvent: ApiErrorEvent) {
+        swipeRefreshLayout.isRefreshing = false
+
+        if (mJobsListAdapter.itemCount <= 0) {
+            vpEmptyNews.visibility = View.VISIBLE
+            snackBar = Snackbar.make(rvJobsList,errorEvent.errorMessage,Snackbar.LENGTH_INDEFINITE)
+            snackBar!!.show()
+        }else{
+            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

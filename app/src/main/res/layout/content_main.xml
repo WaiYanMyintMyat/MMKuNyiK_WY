@@ -8,24 +8,30 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.waiyan.mmkunyik.components.SmartRecyclerView
-            android:id="@+id/rvJobsList"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
 
+            <com.example.waiyan.mmkunyik.components.SmartRecyclerView
+                android:id="@+id/rvJobsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <include
+            android:id="@+id/vpEmptyNews"
+            layout="@layout/view_pod_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>
 
-    <!--<include-->
-    <!--android:id="@+id/vpEmptyNews"-->
-    <!--layout="@layout/view_pod_empty"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->

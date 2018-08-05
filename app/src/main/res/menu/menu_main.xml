@@ -2,12 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_lastest_news"
-        android:title="Lastest News"/>
-    <item
-        android:id="@+id/menu_news_just_for_now"
-        android:title="News Just For You"
+        android:title="JobLists"
+        android:icon="@drawable/ic_work_black_24dp"
         android:checked="true"/>
     <item
+        android:id="@+id/menu_news_just_for_now"
+        android:title="Jobs For You"
+        android:icon="@drawable/ic_notifications_active_black_24dp"/>
+    <item
         android:id="@+id/menu_favourite_news"
-        android:title="Favorite News"/>
+        android:title="Populated Jobs"
+        android:icon="@drawable/ic_directions_walk_black_24dp"/>
 </menu>

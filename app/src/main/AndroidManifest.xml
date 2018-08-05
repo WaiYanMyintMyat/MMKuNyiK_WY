@@ -23,6 +23,9 @@
         <activity
             android:name=".activities.AccountControlActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".activities.JobDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
